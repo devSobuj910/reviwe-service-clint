@@ -6,25 +6,27 @@ import MyReviewCard from './MyReviewCard';
 
 const MyReview = () => {
 
-  const { user } = useContext(AuthContext);
+  const { user, logOut } = useContext(AuthContext);
 
   const [userEmails, setUserEmails] = useState([]);
 
   useEffect(() => {
     fetch(`https://photography-web-server.vercel.app/myreview/${user?.email}`, {
       headers: {
-        authorization: `Bearer ${localStorage.getItem('photo-token')}`
+        authorization: `Bearer ${localStorage.getItem("photo-token")}`
       }
-
     })
-      .then(res => res.json())
-      .then(data => {
-        setUserEmails(data)
-
+      .then((res) => {
+        if (res.status === 401 || res.status === 403) {
+          return logOut();
+        }
+        return res.json();
       })
-      .catch(error => console.log(error))
-
-  }, [userEmails]);
+      .then((data) => {
+        setUserEmails(data);
+      })
+      .catch((error) => console.log(error));
+  }, [user?.email, logOut]);
 
 
 

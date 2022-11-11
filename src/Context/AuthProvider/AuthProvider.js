@@ -33,7 +33,7 @@ const AuthProvider = ({children}) => {
 
 
   let logOut = () => {
-    setLoding(true)
+    localStorage.removeItem("photo-token");
     return signOut(auth)
 
   }
